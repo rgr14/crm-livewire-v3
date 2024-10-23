@@ -4,6 +4,7 @@ use App\Livewire\Auth\Register;
 use Livewire\Livewire;
 use function Pest\Laravel\assertDatabaseHas;
 use function \Pest\Laravel\assertDatabaseCount;
+use App\Models\User;
 
 it('renders successfully', function () {
     Livewire::test(Register::class)
@@ -25,6 +26,11 @@ it ('should be able to register a new user in the system', function () {
     ]);
 
     assertDatabaseCount('users', 1);
+
+
+    expect(auth()->check())
+        ->and(auth()->user())
+        ->id->toBe(User::first()->id);
 });
 
 test('validation rules', function ($f) {
