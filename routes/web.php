@@ -2,4 +2,4 @@
 
 use Livewire\Volt\Volt;
 
-Volt::route('/', 'users.index');
+Volt::route('/', 'users.index')->name('home');

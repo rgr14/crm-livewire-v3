@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -37,5 +38,7 @@ class Register extends Component
         ]);
 
         auth()->login($user);
+
+        $this->redirect('/');
     }
 }
