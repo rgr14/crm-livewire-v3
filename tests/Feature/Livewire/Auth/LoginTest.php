@@ -31,5 +31,6 @@ it('should make sure to inform the user an error when email and password downst 
         ->set('email', 'joe@doe.com')
         ->set('password', 'password')
         ->call('tryToLogin')
-        ->assertHasNoErrors();
+        ->assertHasErrors(['invalidCredentials'])
+        ->assertSee(trans('auth.failed'));
 });
