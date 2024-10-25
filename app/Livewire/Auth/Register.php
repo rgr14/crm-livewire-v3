@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Rule;
@@ -40,6 +41,7 @@ class Register extends Component
         ]);
 
         auth()->login($user);
+        $user->notify(new WelcomeNotification);
 
         $this->redirect('/');
     }
