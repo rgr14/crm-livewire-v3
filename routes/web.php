@@ -5,6 +5,7 @@ use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Volt::route('/', 'users.index');
+//Volt::route('/', 'users.index');
+Route::get('/', \App\Livewire\Welcome::class)->name('dashboard');
 Route::get('/register', Register::class)->name('register');
-Route::get('/logout', fn() => Auth::logout());
+Route::get('/logout', fn() => Auth::logout())->name('logout');
