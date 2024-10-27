@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Password;
+namespace App\Livewire\Auth\Password;
 
 use App\Models\User;
 use App\Notifications\PasswordRecoveryNotification;
@@ -17,7 +17,8 @@ class Recovery extends Component
 
     public function render()
     {
-        return view('livewire.password.recovery');
+        return view('livewire.auth.password.recovery')
+            ->layout('components.layouts.guest');
     }
 
     public function startPasswordRecovery(): void
