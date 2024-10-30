@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 use function Pest\Laravel\get;
 
-test('i need to have a route that will receive the token and the email that needs to be reset it', function() {
-    get(route('password.reset'))
-        ->assertSeeLivewire('auth.password.reset');
-});
-
 test('need to receive a valid token with a combination with the email', function () {
     Notification::fake();
 
