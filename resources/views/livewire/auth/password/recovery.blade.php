@@ -11,7 +11,7 @@
 
         <x-slot:actions>
             <div class="w-full flex items-center justify-between">
-                <a wire:navigate href="{{route('auth.login')}}" class="link link-primary">
+                <a wire:navigate href="{{route('login')}}" class="link link-primary">
                     Never mind, get back to login page.
                 </a>
                 <div>
