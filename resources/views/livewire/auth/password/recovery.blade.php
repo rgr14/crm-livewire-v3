@@ -1,7 +1,7 @@
 <x-card title="Password Recovery" shadow class="mx-auto w-[450px]">
 
     @if($message)
-        <x-alert icon="o-exclamation-triangle" class="alert-warning mb-4" >
+        <x-alert icon="o-exclamation-triangle" class="alert-success mb-4" >
                 <span>You will receive an email with the password recovery link.</span>
         </x-alert>
     @endif

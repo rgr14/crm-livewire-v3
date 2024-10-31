@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -43,6 +44,12 @@ class Reset extends Component
         return obfuscate_email($this->email);
     }
 
+    #[Layout('components.layouts.guest')]
+    public function render()
+    {
+        return view('livewire.auth.password.reset');
+    }
+
     public function updatePassword():void
     {
         $this->validate();
@@ -59,13 +66,11 @@ class Reset extends Component
         );
 
         session()->flash('status', __($status));
+        if ($status != Password::PASSWORD_RESET) {
+            return;
+        }
 
-        $this->redirect(route('dashboard'));
-    }
-
-    public function render()
-    {
-        return view('livewire.auth.password.reset');
+        $this->redirect(route('login'));
     }
 
     private function tokenNotValid():bool

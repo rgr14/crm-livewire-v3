@@ -55,7 +55,7 @@ test('test if is possible to reset the passwird with the given token', function 
                 ->set('password_confirmation', 'new-password')
             ->call('updatePassword')
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('login'));
 
             $user->refresh();
 
@@ -68,7 +68,7 @@ test('test if is possible to reset the passwird with the given token', function 
     );
 });
 
-test('testing email property', function ($field, $value, $rule) {
+test('checking form rules', function ($field, $value, $rule) {
     Notification::fake();
 
     $user = User::factory()->create();
