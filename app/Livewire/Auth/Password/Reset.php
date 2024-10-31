@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -34,6 +35,12 @@ class Reset extends Component
             session()->flash('status', 'Token Invalid');
             $this->redirectRoute('login');
         }
+    }
+
+    #[Computed]
+    public function obfuscatedEmail(): string
+    {
+        return obfuscate_email($this->email);
     }
 
     public function updatePassword():void
