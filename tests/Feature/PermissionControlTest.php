@@ -22,3 +22,13 @@ it('should be able to give an user a permission to do something', function () {
         'permission_id' => Permission::where('key', '=', 'be an admin')->first()->id,
     ]);
 });
+
+test('permissions has to have a seeder', function () {
+   $this->seed(\Database\Seeders\PermissionSeeder::class);
+
+   \Pest\Laravel\assertDatabaseHas('permissions', [
+       'key' => 'be an admin',
+   ]);
+});
+
+
