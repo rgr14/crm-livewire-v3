@@ -2,6 +2,7 @@
 
 use App\Models\Permission;
 use App\Models\User;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
 it('should be able to give an user a permission to do something', function () {
@@ -27,7 +28,7 @@ it('should be able to give an user a permission to do something', function () {
 test('permissions has to have a seeder', function () {
    \Pest\Laravel\seed(\Database\Seeders\PermissionSeeder::class);
 
-   \Pest\Laravel\assertDatabaseHas('permissions', [
+   assertDatabaseHas('permissions', [
        'key' => 'be an admin',
    ]);
 });
@@ -38,7 +39,7 @@ test('seed with an admin user', function () {
         \Database\Seeders\UserSeeder::class
     ]);
 
-    \Pest\Laravel\assertDatabaseHas('permissions', [
+    assertDatabaseHas('permissions', [
         'key' => 'be an admin',
     ]);
 
@@ -48,4 +49,10 @@ test('seed with an admin user', function () {
     ]);
 });
 
+test('should block the access to an admin page if the user dos not have the permission to be an admin', function () {
+    $user = User::factory()->create();
 
+    actingAs($user)
+        ->get(route('admin.dashboard'))
+        ->assertForbidden();
+});
