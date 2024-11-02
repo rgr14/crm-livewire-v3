@@ -2,6 +2,8 @@
 
 use App\Models\Permission;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -49,10 +51,34 @@ test('seed with an admin user', function () {
     ]);
 });
 
-test('should block the access to an admin page if the user dos not have the permission to be an admin', function () {
+it('should block the access to an admin page if the user dos not have the permission to be an admin', function () {
     $user = User::factory()->create();
 
     actingAs($user)
         ->get(route('admin.dashboard'))
         ->assertForbidden();
 });
+
+test("let's make sure that we are using cache to store user permissions", function () {
+    $user = User::factory()->create();
+
+    $user->givePermissionTo('be an admin');
+
+    $cachekey = "user::{$user->id}::permissions";
+
+    expect(Cache::has($cachekey))->toBeTrue('Checking if cache key exists')
+        ->and(Cache::get($cachekey))->toBe($user->permissions, 'Checking if permissions are the same as the user');
+});
+
+test("le'ts make sure that we are using the cache the retrieve/check when the user has the giver permission", function () {
+    $user = User::factory()->create();
+
+    $user->givePermissionTo('be an admin');
+
+    DB::listen( fn ($query) => throw new Exception('We got a hit'));
+    $user->hasPermissionTo('be an admin');
+
+    expect(true)->toBeTrue();
+});
+
+
