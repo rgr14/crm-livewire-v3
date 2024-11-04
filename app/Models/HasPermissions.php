@@ -13,10 +13,12 @@ trait HasPermissions
         return $this->belongsToMany(Permission::class);
     }
 
-    public function givePermissionTo(string $key): void
+    public function givePermissionTo(Can|string $key): void
     {
+        $pKey = $key instanceof Can ? $key->value : $key;
+
         $this->permissions()->firstOrCreate([
-            'key' => $key,
+            'key' => $pKey,
         ]);
 
         Cache::forget($this->getPermissionCacheKey());
@@ -26,13 +28,15 @@ trait HasPermissions
         );
     }
 
-    public function hasPermissionTo(string $key): bool
+    public function hasPermissionTo(Can|string $key): bool
     {
+        $pKey = $key instanceof Can ? $key->value : $key;
+
         /** @var Collection $permissions */
         $permissions = Cache::get($this->getPermissionCacheKey(), $this->permissions);
 
         return $permissions
-            ->where("key", '=', $key)
+            ->where("key", '=', $pKey)
             ->isNotEmpty();
     }
 
