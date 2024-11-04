@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Can;
+use App\Enum\Can;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;

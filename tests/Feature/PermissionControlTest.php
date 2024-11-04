@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Can;
+use App\Enum\Can;
 use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
