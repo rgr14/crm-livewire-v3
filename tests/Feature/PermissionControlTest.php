@@ -28,7 +28,7 @@ it('should be able to give an user a permission to do something', function () {
     ]);
 });
 
-test('permissions has to have a seeder', function () {
+test('permissions must have a seeder', function () {
    \Pest\Laravel\seed(\Database\Seeders\PermissionSeeder::class);
 
    assertDatabaseHas('permissions', [
