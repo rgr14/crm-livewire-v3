@@ -1,10 +1,21 @@
 <?php
 
+use App\Models\User;
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\get;
+
 it('should be able to access the route admin/users', function () {
 
-    $user = \App\Models\User::factory()->admin()->create();
+     actingAs(User::factory()->admin()->create());
 
 
-    \Pest\Laravel\get(route('admin.users'))
+    get(route('admin.users'))
         ->assertOk();
+});
+
+test('making sure that the route is protected by the permission BE_AN_ADMIN', function () {
+   actingAs(User::factory()->create());
+
+    get(route('admin.users'))
+        ->assertForbidden();
 });
