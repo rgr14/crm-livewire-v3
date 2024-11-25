@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\Can;
+use App\Livewire\Admin;
 use App\Livewire\Auth\{Login, Password, Register};
 use App\Livewire\Welcome;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
     //region Admin
         Route::prefix('/admin')->middleware('can:' . Can::BE_AN_ADMIN->value)->group(function () {
-            Route::get('/dashboard', fn() => 'admin.dashboard')->name('admin.dashboard');
+            Route::get('/dashboard', Admin\Dashboard::class)->name('admin.dashboard');
         });
     //endregion
 });
