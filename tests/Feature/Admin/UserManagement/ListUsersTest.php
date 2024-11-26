@@ -2,7 +2,7 @@
 
 use App\Livewire\Admin;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
@@ -30,7 +30,7 @@ test("let's create a livewire component to list all users in the page", function
     $lw = Livewire::test(Admin\Users\Index::class)
         ->assertSet('users', function ($users) {
             expect($users)
-                ->toBeInstanceOf(LengthAwarePaginator::class)
+                ->toBeInstanceOf(Collection::class)
                 ->toHaveCount(11);
 
             return true;
@@ -52,4 +52,34 @@ test('check the table format', function () {
             ['key' => 'email', 'label' => 'Email'],
             ['key' => 'permissions', 'label' => 'Permissions']
         ]);
+});
+
+test('should be able to filter by name and email', function () {
+    $admin = User::factory()->admin()->create(['name' => 'Joe Doe', 'email' => 'admin@example.com']);
+    $mario = User::factory()->create(['name' => 'Mario', 'email' => 'little_guy@example.com']);
+
+    actingAs($admin);
+
+    Livewire::test(Admin\Users\Index::class)
+        ->assertSet('users', function ($users) {
+            expect($users)->toHaveCount(2);
+
+            return true;
+        })
+        ->set('search', 'mar')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->toHaveCount(1)
+                ->first()->name->toBe('Mario');
+
+            return true;
+        })
+        ->set('search', 'guy')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->toHaveCount(1)
+                ->first()->name->toBe('Mario');
+
+            return true;
+        });
 });
