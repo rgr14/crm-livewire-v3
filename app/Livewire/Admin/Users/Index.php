@@ -34,7 +34,7 @@ class Index extends Component
     public function users(): Collection
     {
         $this->validate(['search_permissions' => 'exists:permissions,id']);
-        
+
         return User::query()
             ->when(
                 $this->search,
@@ -49,12 +49,9 @@ class Index extends Component
                 )
             )
             ->when($this->search_permissions,
-                fn (Builder $query) => $query->whereRaw(
-                    '(select count(*) from permission_user
-                    where permission_id in (?)
-                    and user_id = users.id) > 0
-                    ', $this->search_permissions
-                )
+                fn (Builder $q) => $q->whereHas('permissions', function (Builder $query) {
+                    $query->whereIn('id', $this->search_permissions);
+                })
             )
             ->get();
     }
