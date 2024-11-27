@@ -55,7 +55,7 @@ test('check the table format', function () {
         ]);
 });
 
-test('should be able to filter by name and email', function () {
+it('should be able to filter by name and email', function () {
     $admin = User::factory()->admin()->create(['name' => 'Joe Doe', 'email' => 'admin@example.com']);
     $mario = User::factory()->create(['name' => 'Mario', 'email' => 'little_guy@example.com']);
 
@@ -85,7 +85,7 @@ test('should be able to filter by name and email', function () {
         });
 });
 
-test('should be able to filter by permission.key', function () {
+it('should be able to filter by permission.key', function () {
     $admin = User::factory()->admin()->create(['name' => 'Joe Doe', 'email' => 'admin@example.com']);
     $mario = User::factory()->create(['name' => 'Mario', 'email' => 'little_guy@example.com']);
 
@@ -109,7 +109,7 @@ test('should be able to filter by permission.key', function () {
         });
 });
 
-test('should be able to list deleted users', function () {
+it('should be able to list deleted users', function () {
     $admin = User::factory()->admin()->create(['name' => 'Joe Doe', 'email' => 'admin@example.com']);
     $mario = User::factory()->count(2)->create(['deleted_at' => now()]);
 
@@ -130,4 +130,31 @@ test('should be able to list deleted users', function () {
 
             return true;
         });
+});
+
+it('should be able to sort by name', function () {
+    $admin = User::factory()->admin()->create(['name' => 'Joe Doe', 'email' => 'admin@example.com']);
+    $nonADmin = User::factory()->withPermission(\App\Enum\Can::TESTING)->create(['name' => 'Mario', 'email' => 'lillet_guy@example.com']);
+
+    // ASC => Joe, Mario
+    // DESC => Mario, Joe
+    actingAs($admin);
+    Livewire::test(Admin\Users\Index::class)
+        ->set('sortDirection', 'asc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->first()->name->toBe('Joe Doe')
+                ->and($users)->last()->name->toBe('Mario');
+            return true;
+        })
+        ->set('sortDirection', 'desc')
+        ->set('sortColumnBy', 'name')
+        ->assertSet('users', function ($users) {
+            expect($users)
+                ->first()->name->toBe('Mario')
+                ->and($users)->last()->name->toBe('Joe Doe');
+            return true;
+        })
+    ;
 });
